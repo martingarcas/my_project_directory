@@ -21,3 +21,4 @@ class LuckyController extends AbstractController
 
 //https://symfony.com/doc/current/routing.html
 //https://symfony.com/doc/current/doctrine.html#configuring-the-database
+//;xdebug

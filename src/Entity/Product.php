@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProductRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -22,6 +23,11 @@ class Product
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
+
+    // Personalizamos el mensaje de error para la validación
+    #[Assert\IsFalse(message: "El valor de 'prueba' debería ser falso.")]
+    #[ORM\Column]
+    private ?bool $prueba = null;
 
     public function getId(): ?int
     {
@@ -60,6 +66,18 @@ class Product
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function isPrueba(): ?bool
+    {
+        return $this->prueba;
+    }
+
+    public function setPrueba(bool $prueba): static
+    {
+        $this->prueba = $prueba;
 
         return $this;
     }

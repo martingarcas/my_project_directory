@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProductController!{% endblock %}
+{% block title %}Detalles del Producto{% endblock %}
 
 {% block body %}
 <style>
@@ -9,12 +9,25 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Resultado de la creación del producto</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/xampp/htdocs/my_project_directory/src/Controller/ProductController.php</code></li>
-        <li>Your template at <code>C:/xampp/htdocs/my_project_directory/templates/product/index.html.twig</code></li>
-    </ul>
+    {# Si hay errores, los mostramos #}
+    {% if errors is defined and errors|length > 0 %}
+        <h3>Se encontraron los siguientes errores:</h3>
+        <ul>
+            {% for error in errors %}
+                <li>{{ error.message }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {# Si no hay errores, mostramos el producto creado #}
+        <h3>Producto creado exitosamente:</h3>
+        <p><strong>Nombre:</strong> {{ product.name }}</p>
+        <p><strong>Precio:</strong> {{ product.price }}</p>
+        <p><strong>Descripcion:</strong> {{ product.description }}</p>
+        <p><strong>Prueba:</strong> {{ product.prueba }}</p>
+        <p><strong>ID:</strong> {{ product.id }}</p>
+    {% endif %}
 </div>
+
 {% endblock %}

@@ -1,46 +1,58 @@
 <?php
 
+// src/Controller/ProductController.php
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Form\ProductType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-
 
 class ProductController extends AbstractController
 {
     #[Route('/product', name: 'create_product')]
-    public function createProduct(EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    public function createProduct(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
-        $product = new Product();
-        $product->setName('Keyboard');
-        $product->setPrice(1999);
-        $product->setDescription('Ergonomic and stylish!');
-        $product->setPrueba(true);  // Asignamos un valor incorrecto para "prueba"
+        $product = new Product(); // Creamos una nueva instancia de Product
 
-        // Validamos el producto
-        $errors = $validator->validate($product);
+        // Creamos el formulario basado en la entidad Product
+        $form = $this->createForm(ProductType::class, $product);
 
-        $errors = $validator->validate($product);
-        if (count($errors) > 0) {
-            // Pasamos los errores a la vista
+        // Procesamos el formulario cuando el usuario lo envía
+        $form->handleRequest($request);
+
+        // Si el formulario es enviado y es válido
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Validamos el producto
+            $errors = $validator->validate($product);
+            
+            if (count($errors) > 0) {
+                // Pasamos los errores a la vista si no es válido
+                return $this->render('product/index.html.twig', [
+                    'errors' => $errors,
+                    'form' => $form->createView(),
+                ]);
+            }
+
+            // Persistimos el producto en la base de datos
+            $entityManager->persist($product);
+            $entityManager->flush();
+
+            // Redirigimos a la página de éxito o mostramos el producto
             return $this->render('product/index.html.twig', [
-                'errors' => $errors
+                'product' => $product,
+                'form' => $form->createView(),
             ]);
         }
 
-        // tell Doctrine you want to (eventually) save the Product (no queries yet)
-        $entityManager->persist($product);
-
-        // actually executes the queries (i.e. the INSERT query)
-        $entityManager->flush();
-
-        // Si todo va bien, pasamos el producto creado a la vista
+        // Si el formulario no fue enviado o no es válido, lo mostramos
         return $this->render('product/index.html.twig', [
-            'product' => $product
+            'form' => $form->createView(),
         ]);
     }
 }
+

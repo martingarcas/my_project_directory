@@ -21,8 +21,8 @@ final class CheckActiveQuestionsSchedule implements ScheduleProviderInterface
     {
         return (new Schedule())
             ->add(
-                //RecurringMessage::every('10 seconds', new CheckActiveQuestionsMessage()),
-                RecurringMessage::every('1 hour', new CheckActiveQuestionsMessage()),
+                RecurringMessage::every('10 seconds', new CheckActiveQuestionsMessage()),
+                //RecurringMessage::every('1 hour', new CheckActiveQuestionsMessage()),
             )
             ->stateful($this->cache)
         ;

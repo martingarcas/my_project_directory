@@ -1,0 +1,26 @@
+{# templates/user/pregunta/responder_pregunta.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Responder Pregunta{% endblock %}
+
+{% block body %}
+    <h1>Respuesta recibida</h1>
+
+    {% if mensaje %}
+        <p>{{ mensaje }}</p>
+    {% elseif respuesta_correcta is not null %}
+        {% if respuesta_correcta %}
+            <p>¡Respuesta correcta!</p>
+        {% else %}
+            <p>Respuesta incorrecta</p>
+        {% endif %}
+    {% endif %}
+
+    <div>
+        <a href="{{ path('ver_respuestas') }}" class="btn btn-primary">Ver respuestas</a>
+    </div>
+{% endblock %}
+
+
+

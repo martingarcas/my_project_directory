@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Crear Pregunta{% endblock %}
+
+{% block body %}
+
+    {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
+        <div class="mb-3">
+            <a href="{{ path('admin_preguntas_list') }}" class="btn btn-primary">Ver preguntas</a>
+        </div>
+    {% endif %}
+
+    <h1>Crear nueva pregunta</h1>
+
+    {# Mostrar mensajes flash si existen #}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger" id="flashMessage">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {# Formulario para crear la nueva pregunta #}
+    {{ form_start(form) }}
+        {{ form_row(form.enunciado) }}
+        {{ form_row(form.fecha_inicio) }}
+        {{ form_row(form.fecha_fin) }}
+        {{ form_row(form.respuesta1) }}
+        {{ form_row(form.respuesta2) }}
+        {{ form_row(form.respuesta3) }}
+        {{ form_row(form.respuesta4) }}
+        {{ form_row(form.respuesta_correcta) }}
+
+        <button type="submit" class="btn btn-primary">Crear pregunta</button>
+    {{ form_end(form) }}
+
+{% endblock %}

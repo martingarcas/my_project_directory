@@ -1,17 +1,88 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+{# templates/base.html.twig #}
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mi Aplicación Symfony{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    {# Este bloque es para cargar CSS personalizado desde archivos locales (en la carpeta public/) #}
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    {% endblock %}
+
+    {% block javascripts %}
+        <script type="text/javascript">
+            // Ocultar el mensaje flash después de 5 segundos
+            setTimeout(function() {
+                var flashMessage = document.getElementById('flashMessage');
+                if (flashMessage) {
+                    flashMessage.style.display = 'none';
+                }
+            }, 5000); // 5000 milisegundos = 5 segundos
+        </script>
+    {% endblock %}
+</head>
+<body>
+
+    <header>
+        <div class="mb-3">
+            <a href="{{ path('home') }}" class="btn btn-primary">Inicio</a>
+        </div>
+    </header>
+
+    {% if app.user %}
+        <div class="mb-3">
+            Estás logueado como {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Cerrar sesión</a>
+        </div>
+    {% endif %}
+    
+
+    <div class="container">
+        {% block body %}
+
+            {% if not app.user %}
+
+                <h1>Bienvenido a mi primera aplicación de Symfony!</h1>
+
+                <div class="mb-3">
+                    <a href="{{ path('app_register') }}" class="btn btn-primary">Registrarse</a>
+                </div>
+
+                <div class="mb-3">
+                    <a href="{{ path('app_login') }}" class="btn btn-primary">Loguearse</a>
+                </div>
+
+            {% endif %}
+
+            {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
+
+                <div class="mb-3">
+                    <a href="{{ path('create_pregunta') }}" class="btn btn-primary">Crear pregunta</a>
+                </div>
+
+                <div class="mb-3">
+                    <a href="{{ path('admin_preguntas_list') }}" class="btn btn-primary">Ver preguntas</a>
+                </div>
+
+            {% endif %}
+
+            {% if app.user and 'ROLE_USER' in app.user.roles %}
+
+                <div class="mb-3">
+                    <a href="{{ path('ver_pregunta') }}" class="btn btn-primary">Ver pregunta activa</a>
+                </div>
+
+            {% endif %}
+
         {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+        
+    </div>
+
+    <footer class="text-center mt-4">
+        <p>&copy; casi 2025 Martín</p>
+    </footer>
+
+</body>
 </html>

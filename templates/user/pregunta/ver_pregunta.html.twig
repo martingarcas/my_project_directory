@@ -1,0 +1,46 @@
+{# templates/user/pregunta/ver_pregunta.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Ver Pregunta{% endblock %}
+
+{% block body %}
+    <h1>{{ pregunta.enunciado }}</h1>
+
+    <form method="post" action="{{ path('responder_pregunta') }}">
+        <div>
+            <label>
+                <input type="radio" name="respuesta" value="{{ pregunta.respuesta1 }}" required>
+                {{ pregunta.respuesta1 }}
+            </label>
+        </div>
+        <div>
+            <label>
+                <input type="radio" name="respuesta" value="{{ pregunta.respuesta2 }}" required>
+                {{ pregunta.respuesta2 }}
+            </label>
+        </div>
+        {% if pregunta.respuesta3 %}
+        <div>
+            <label>
+                <input type="radio" name="respuesta" value="{{ pregunta.respuesta3 }}">
+                {{ pregunta.respuesta3 }}
+            </label>
+        </div>
+        {% endif %}
+        {% if pregunta.respuesta4 %}
+        <div>
+            <label>
+                <input type="radio" name="respuesta" value="{{ pregunta.respuesta4 }}">
+                {{ pregunta.respuesta4 }}
+            </label>
+        </div>
+        {% endif %}
+
+        <button type="submit">Enviar respuesta</button>
+    </form>
+
+    <div>
+        <a href="{{ path('ver_respuestas') }}" class="btn btn-primary">Ver respuestas</a>
+    </div>
+{% endblock %}
